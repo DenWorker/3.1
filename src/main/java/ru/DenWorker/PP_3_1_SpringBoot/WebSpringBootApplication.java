@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebSpringBootApplication {
 
 	// git check
-	//http://localhost:8080/users
+	//http://localhost:8080/admin/all_users
 	public static void main(String[] args) {
 		SpringApplication.run(WebSpringBootApplication.class, args);
 		System.out.println("Hello world");

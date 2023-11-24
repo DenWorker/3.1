@@ -35,10 +35,10 @@ public class UserDaoImp implements UserDao {
         User existingUser = entityManager.find(User.class, userId);
         if (existingUser != null) {
             existingUser.setName(updatedUser.getName());
-            existingUser.setLast_name(updatedUser.getLast_name());
             existingUser.setGender(updatedUser.getGender());
             existingUser.setAge(updatedUser.getAge());
             existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setRoles(updatedUser.getRoles());
             entityManager.merge(existingUser);
         }
     }
