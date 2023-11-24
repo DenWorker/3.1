@@ -71,12 +71,7 @@ public class AdminController {
             return "/users/edit_user";
         }
 
-        if (roleIds != null) {
-            List<Role> selectedRoles = roleServiceImp.getRolesByIds(roleIds);
-            updateUser.setRoles(selectedRoles);
-        }
-
-        userService.editUser(userId, updateUser);
+        userService.editUserAndHisRoles(userId, updateUser, roleIds);
         return "redirect:/admin/all_users";
     }
 }

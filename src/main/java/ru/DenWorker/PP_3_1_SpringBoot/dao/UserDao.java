@@ -12,7 +12,7 @@ public interface UserDao {
 
     void deleteUserById(long userId);
 
-    void editUser(long userId, User updatedUser);
+    void editUserAndHisRoles(long userId, User updatedUser, List<Long> roleIds);
 
     User getUserById(long userId);
 }
