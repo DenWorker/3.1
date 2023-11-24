@@ -15,10 +15,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class WebSecurityConfig {
     private final AuthProviderImpl authProvider;
+    private final CustomLoginSuccessHandler customLoginSuccessHandler;
 
     @Autowired
-    public WebSecurityConfig(AuthProviderImpl authProvider) {
+    public WebSecurityConfig(AuthProviderImpl authProvider, CustomLoginSuccessHandler customLoginSuccessHandler) {
         this.authProvider = authProvider;
+        this.customLoginSuccessHandler = customLoginSuccessHandler;
     }
 
     @Bean
@@ -40,7 +42,7 @@ public class WebSecurityConfig {
         http.formLogin(form -> form
                         .loginPage("/auth/login")
                         .failureUrl("/auth/error")
-                        .defaultSuccessUrl("/auth/redirectByRole", true))
+                        .successHandler(customLoginSuccessHandler))
                 .httpBasic(withDefaults())
                 .authenticationProvider(authProvider);
 

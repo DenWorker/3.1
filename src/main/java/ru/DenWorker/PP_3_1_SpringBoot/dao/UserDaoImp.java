@@ -3,17 +3,25 @@ package ru.DenWorker.PP_3_1_SpringBoot.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.DenWorker.PP_3_1_SpringBoot.model.Role;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
+import ru.DenWorker.PP_3_1_SpringBoot.service.RoleService;
 
 import java.util.List;
 
-@Repository
+@Component
 public class UserDaoImp implements UserDao {
 
+    private final RoleService roleService;
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    public UserDaoImp(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @Override
     public List<User> getAllUsers() {
@@ -31,7 +39,11 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public void editUser(long userId, User updatedUser) {
+    public void editUserAndHisRoles(long userId, User updatedUser, List<Long> roleIds) {
+        if (roleIds != null) {
+            List<Role> selectedRoles = roleService.getRolesByIds(roleIds);
+            updatedUser.setRoles(selectedRoles);
+        }
         User existingUser = entityManager.find(User.class, userId);
         if (existingUser != null) {
             existingUser.setName(updatedUser.getName());
