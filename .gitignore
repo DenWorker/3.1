@@ -10,9 +10,7 @@
 .mvn/
 log/
 target/
-HELP.md
-mvnw
-mvnw.cmd
+
 
 # Another
 *.properties

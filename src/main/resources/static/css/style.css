@@ -12,7 +12,7 @@
 
 body {
     background-color: #000000;
-    background-image: url("/resources/static/images/background.png");
+    background-image: url("/static/images/background.png");
     background-attachment: fixed;
 }
 
@@ -39,6 +39,6 @@ body {
     width: 12px; /* Ширина ресайз-регулятора */
     height: 12px; /* Высота ресайз-регулятора */
     background-color: #21252a;
-    background-image: url('/resources/static/images/resizer.png'); /* Путь к изображению */
+    background-image: url('/static/images/resizer.png'); /* Путь к изображению */
     background-size: cover;
 }

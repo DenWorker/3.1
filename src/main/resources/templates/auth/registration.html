@@ -12,20 +12,19 @@
     <title>Регистрация нового пользователя</title>
 </head>
 <body>
-<div th:replace="~{navbar.html}"></div>
 
 <div class="container d-flex justify-content-center align-items-center">
     <div class="row p-3">
-        <form style="margin-bottom: 5px;" th:action="@{/users}" th:method="GET">
+        <form style="margin-bottom: 5px;" th:action="@{/auth/login}" th:method="GET">
             <button class="btn btn-outline-success bi-arrow-left-square" type="submit"> Назад</button>
         </form>
 
-        <form class="card" style="margin: 10px; padding: 10px; width: 40rem;" th:action="@{/users/new_user}"
+        <form class="card" style="margin: 10px; padding: 10px; width: 40rem;" th:action="@{/auth/registration}"
               th:method="POST"
               th:object="${user}">
 
             <div class="card-header bi-database-add" style="color: #aeff6d; font-size: 30px">
-                Регистрация нового пользователя
+                Регистрация
             </div>
 
             <div class="card-body " style="margin: 10px; padding: 10px">
@@ -39,16 +38,17 @@
                            th:if="${#fields.hasErrors('name')}"></label>
                 </div>
 
+
                 <div class="form-floating mb-3">
-                    <input class="form-control"
-                           id="inputLast_name"
-                           placeholder="Отчество"
-                           th:class="${#fields.hasErrors('last_name')}? 'class= form-control is-invalid' : 'class= form-control'"
-                           th:field="*{last_name}">
-                    <label for="inputLast_name" th:if="${!#fields.hasErrors('last_name')}">Отчество нового
+                    <input id="InputPassword"
+                           placeholder="Пароль"
+                           type="password"
+                           th:class="${#fields.hasErrors('password')}? 'class= form-control is-invalid' : 'class= form-control'"
+                           th:field="*{password}">
+                    <label for="InputPassword" th:if="${!#fields.hasErrors('password')}">Пароль нового
                         пользователя</label>
-                    <label for="inputLast_name" th:errors="*{last_name}"
-                           th:if="${#fields.hasErrors('last_name')}"></label>
+                    <label for="InputPassword" th:errors="*{password}"
+                           th:if="${#fields.hasErrors('password')}"></label>
                 </div>
 
                 <div class="card" style="padding: 10px; width: 20rem;">
@@ -104,7 +104,7 @@
                 <hr>
 
                 <div class="container d-flex justify-content-end align-items-center">
-                    <button class=" btn btn-outline-success bi-database-add" type="submit"> Добавить нового пользователя
+                    <button class=" btn btn-outline-success bi-database-add" type="submit"> Зарегистрироваться
                     </button>
                 </div>
             </div>

@@ -11,6 +11,29 @@
             <p style="margin: 5px; font-size: 21px;"> Data Base of users</p>
         </div>
     </div>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a aria-expanded="false" class="btn btn-outline-success bi-list" data-bs-toggle="dropdown"
+               role="button"
+               style="font-size: 15px;"
+               th:text="' ' + ${currentUser.getUsername()}">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <form class="d-flex justify-content-center" th:action="@{/user/{id}(id=${currentUser.getUser().getId()})}" th:method="GET">
+                        <button class="btn btn-outline-success bi-person-square" type="submit"> Профиль</button>
+                    </form>
+                    <br>
+                </li>
+                <li>
+                    <form class="d-flex justify-content-center" th:action="@{/logout}" th:method="POST">
+                        <button class="btn btn-outline-danger bi-door-open" type="submit"> Выйти</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
 </nav>
 
 </body>

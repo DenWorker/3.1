@@ -12,7 +12,7 @@
     <title>Пользователи</title>
 </head>
 <body>
-<div th:replace="~{navbar.html}"></div>
+<div th:replace="other/navbar.html"></div>
 
 
 <div class="container d-flex justify-content-center align-items-center">
@@ -26,10 +26,10 @@
                     <tr>
                         <th scope="col">id пользователя</th>
                         <th scope="col">Имя</th>
-                        <th scope="col">Отчество</th>
                         <th scope="col">Пол</th>
                         <th scope="col">Возраст</th>
                         <th scope="col">Электронная почта</th>
+                        <th scope="col">Роли пользователя</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -38,19 +38,19 @@
                     <tr th:each="user : ${listOfUsers}">
                         <td th:text="${user.getId()}"></td>
                         <td th:text="${user.getName()}"></td>
-                        <td th:text="${user.getLast_name()}"></td>
                         <td th:text="${user.getGender()}"></td>
                         <td th:text="${user.getAge()}"></td>
                         <td th:text="${user.getEmail()}"></td>
+                        <td th:text="${user.getStringRoles()}"></td>
                         <td>
-                            <form class="mb-2" th:action="@{/users/edit_user}" th:method="GET">
+                            <form class="mb-2" th:action="@{/admin/edit_user}" th:method="GET">
                                 <input type="hidden" name="id" th:value="${user.getId()}">
                                 <button class="btn btn-outline-warning bi-pencil-square" type="submit">
                                 </button>
                             </form>
                         </td>
                         <td>
-                            <form class="mb-2" th:action="@{/users/delete_user}" th:method="DELETE">
+                            <form class="mb-2" th:action="@{/admin/delete_user}" th:method="DELETE">
                                 <input type="hidden" name="id" th:value="${user.getId()}">
                                 <button class="btn btn-outline-danger bi-trash3" type="submit">
                                 </button>
@@ -61,11 +61,6 @@
                 </table>
                 <br>
                 <hr>
-                <div class="container d-flex justify-content-center align-items-center">
-                    <form th:action="@{/users/new_user}" th:method="GET">
-                        <button class="btn btn-outline-success bi-database-add" type="submit"> Создать нового пользователя</button>
-                    </form>
-                </div>
 
             </div>
         </div>

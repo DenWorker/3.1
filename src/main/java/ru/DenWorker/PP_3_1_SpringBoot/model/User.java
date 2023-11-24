@@ -4,6 +4,9 @@ package ru.DenWorker.PP_3_1_SpringBoot.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,12 +16,8 @@ public class User {
     private long id;
 
     @Column(name = "name")
-    @Size(min = 2, max = 30, message = "Размер имени от 2 до 30 символов!")
+    @Size(min = 6, max = 300, message = "Размер имени от 6 до 300 символов!")
     private String name;
-
-    @Column(name = "last_name")
-    @Size(min = 2, max = 30, message = "Размер отчества от 2 до 30 символов!")
-    private String last_name;
 
     @Column(name = "gender")
     @NotEmpty(message = "Пол не может быть пустым!")
@@ -33,12 +32,25 @@ public class User {
     @Email(message = "Неверно введён адрес электронной почты!")
     private String email;
 
-    public User(String name, String last_name, String gender, byte age, String email) {
+    @Column(name = "password")
+    @Size(min = 3, max = 300, message = "Размер пароля от 3 до 300 символов!")
+    private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
+
+    public User(long id, String name, String gender, byte age, String email, String password, List<Role> roles) {
+        this.id = id;
         this.name = name;
-        this.last_name = last_name;
         this.gender = gender;
         this.age = age;
         this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
     public User() {
@@ -58,14 +70,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
     }
 
     public String getGender() {
@@ -90,5 +94,25 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getStringRoles() {
+        return getRoles().stream().map(Role::getRoleName).collect(Collectors.joining(";  "));
     }
 }
