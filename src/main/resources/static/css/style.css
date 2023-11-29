@@ -3,6 +3,12 @@
     color: #aeff6d;
 }
 
+select[readonly] {
+    pointer-events: none;
+    background-color: #606367; /* Любой цвет фона, который вы хотите использовать для неактивного состояния */
+}
+
+
 .floating-button {
     position: fixed;
     bottom: 20px;

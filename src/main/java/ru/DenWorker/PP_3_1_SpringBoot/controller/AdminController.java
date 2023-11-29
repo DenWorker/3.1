@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.DenWorker.PP_3_1_SpringBoot.model.Role;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
 import ru.DenWorker.PP_3_1_SpringBoot.security.UserDetailsImpl;
-import ru.DenWorker.PP_3_1_SpringBoot.service.RoleServiceImp;
+import ru.DenWorker.PP_3_1_SpringBoot.service.RoleService;
 import ru.DenWorker.PP_3_1_SpringBoot.service.UserDetailsServiceImpl;
 import ru.DenWorker.PP_3_1_SpringBoot.service.UserService;
 
@@ -21,24 +21,38 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final RoleServiceImp roleServiceImp;
+    private final UserDetailsServiceImpl userDetailsServiceImp;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, UserDetailsServiceImpl userDetailsService, RoleServiceImp roleServiceImp) {
+    public AdminController(UserService userService, UserDetailsServiceImpl userDetailsServiceImp, RoleService roleService) {
         this.userService = userService;
-        this.userDetailsService = userDetailsService;
-        this.roleServiceImp = roleServiceImp;
+        this.userDetailsServiceImp = userDetailsServiceImp;
+        this.roleService = roleService;
     }
 
     @ModelAttribute("currentUser")
     public UserDetailsImpl getCurrentUser() {
-        return userDetailsService.getAuthenticatedUser();
+        return userDetailsServiceImp.getAuthenticatedUser();
+    }
+
+    @ModelAttribute("listOfUsers")
+    public List<User> getListOfUsers() {
+        return userService.getAllUsers();
+    }
+
+    @ModelAttribute("roles")
+    public List<Role> getListOfRoles() {
+        return roleService.getAllRoles();
+    }
+
+    @ModelAttribute("newUser")
+    public User getNewUser() {
+        return new User();
     }
 
     @GetMapping("/all_users")
-    public String getAllUsers(Model model) {
-        model.addAttribute("listOfUsers", userService.getAllUsers());
+    public String getAllUsers() {
 
         if (false) {
             return "other/navbar";
@@ -46,32 +60,55 @@ public class AdminController {
 
         return "users/all_users";
     }
-    
 
-    @DeleteMapping("/delete_user")
-    public String deleteUser(@RequestParam("id") Long userId) {
+
+    @GetMapping("/delete_user/{id}")
+    public String deleteUser(@PathVariable("id") Long userId,
+                             @ModelAttribute("deleteUser") User deleteUser,
+                             Model model) {
+        model.addAttribute("deleteUser", userService.getUserById(userId));
+        return "/users/all_users";
+    }
+
+    @DeleteMapping("/delete_user/{id}")
+    public String deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUserById(userId);
         return "redirect:/admin/all_users";
     }
 
-    @GetMapping("/edit_user")
-    public String editUser(@RequestParam("id") Long userId, Model model) {
-        model.addAttribute("editUser", userService.getUserById(userId));
-        model.addAttribute("roles", roleServiceImp.getAllRoles());
-        return "users/edit_user";
+    @PostMapping("/create_user")
+    public String addUser(@ModelAttribute("newUser") @Valid User newUser,
+                          BindingResult bindingResult,
+                          @RequestParam(name = "roles", required = false) List<Long> roleIds) {
+
+        if (bindingResult.hasErrors()) {
+            return "/users/all_users";
+        }
+
+        userService.addUser(newUser, roleIds);
+        return "redirect:/admin/all_users";
     }
 
-    @PatchMapping("/edit_user")
-    public String patchUser(@RequestParam("id") Long userId,
-                            @ModelAttribute("editUser") @Valid User updateUser,
+    @GetMapping("/edit_user/{id}")
+    public String editUser(@PathVariable("id") Long userId,
+                           @ModelAttribute("editUser") User editUser,
+                           Model model) {
+        model.addAttribute("editUser", userService.getUserById(userId));
+        return "/users/all_users";
+    }
+
+
+    @PatchMapping("/edit_user/{id}")
+    public String patchUser(@PathVariable("id") Long userId,
+                            @ModelAttribute("editUser") @Valid User editUser,
                             BindingResult bindingResult,
                             @RequestParam(name = "roles", required = false) List<Long> roleIds) {
 
         if (bindingResult.hasErrors()) {
-            return "/users/edit_user";
+            return "/users/all_users";
         }
 
-        userService.editUserAndHisRoles(userId, updateUser, roleIds);
+        userService.editUserAndHisRoles(userId, editUser, roleIds);
         return "redirect:/admin/all_users";
     }
 }

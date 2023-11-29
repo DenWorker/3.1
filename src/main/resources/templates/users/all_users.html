@@ -13,61 +13,448 @@
 </head>
 <body>
 <div th:replace="other/navbar.html"></div>
+<!--Модальное окно редактирования-->
+<div th:if="${editUser != null}" class="modal fade" id="editModal"
+     tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/admin/edit_user/{id}(id=${editUser.getId()})}"
+              th:method="PATCH"
+              th:object="${editUser}">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 bi-pencil-square"
+                        id="editModalLabel"> Редактирование данных
+                        пользователя</h1>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body mx-auto">
+
+                    <div class="form-floating mb-3">
+                        <input id="editModalName"
+                               placeholder="Имя"
+                               th:class="${#fields.hasErrors('name')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{name}">
+                        <label for="editModalName" th:if="${!#fields.hasErrors('name')}">Новое имя пользователя</label>
+                        <label for="editModalName" th:errors="*{name}"
+                               th:if="${#fields.hasErrors('name')}"></label>
+                    </div>
 
 
-<div class="container d-flex justify-content-center align-items-center">
-    <div class="row p-3">
-        <div class="card" style="width: 70rem;">
-            <div class="card-header  bi-people" style="color: #aeff6d; font-size: 40px"> Карточка пользователей</div>
-            <div class="card-body">
-                <table class="table table-hover table-sm caption-top border-info text-center">
-                    <caption>Пользователи</caption>
-                    <thead>
-                    <tr>
-                        <th scope="col">id пользователя</th>
-                        <th scope="col">Имя</th>
-                        <th scope="col">Пол</th>
-                        <th scope="col">Возраст</th>
-                        <th scope="col">Электронная почта</th>
-                        <th scope="col">Роли пользователя</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="user : ${listOfUsers}">
-                        <td th:text="${user.getId()}"></td>
-                        <td th:text="${user.getName()}"></td>
-                        <td th:text="${user.getGender()}"></td>
-                        <td th:text="${user.getAge()}"></td>
-                        <td th:text="${user.getEmail()}"></td>
-                        <td th:text="${user.getStringRoles()}"></td>
-                        <td>
-                            <form class="mb-2" th:action="@{/admin/edit_user}" th:method="GET">
-                                <input type="hidden" name="id" th:value="${user.getId()}">
-                                <button class="btn btn-outline-warning bi-pencil-square" type="submit">
-                                </button>
+                    <div class="form-floating mb-3">
+                        <input id="editModalPassword"
+                               placeholder="Пароль"
+                               type="password"
+                               th:class="${#fields.hasErrors('password')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{password}">
+                        <label for="editModalPassword" th:if="${!#fields.hasErrors('password')}">Новый пароль
+                            пользователя</label>
+                        <label for="editModalPassword" th:errors="*{password}"
+                               th:if="${#fields.hasErrors('password')}"></label>
+                    </div>
+
+                    <div class="card" style="padding: 10px; width: 20rem;">
+                        <div class="card-header" style="color: #aeff6d; font-size: 20px">
+                            Выбор пола
+                        </div>
+
+                        <div class="card-body" style="margin: 5px; padding: 5px">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="editModalMale"
+                                       th:value="'Мужской'"
+                                       th:field="*{gender}">
+                                <label class="form-check-label" for="editModalMale">
+                                    Мужской
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="editModalFemale"
+                                       th:value="'Женский'"
+                                       th:field="*{gender}">
+                                <label class="form-check-label" for="editModalFemale">
+                                    Женский
+                                </label>
+                            </div>
+                        </div>
+
+                        <div th:if="${#fields.hasErrors('gender')}"
+                             style="font-size: 14px; margin-top: 5px; border: 1px solid #e8858e; padding: 5px; border-radius: 5px;">
+                            Необходимо выбрать пол!
+                        </div>
+
+                    </div>
+                    <br>
+
+                    <div class="form-floating mb-3">
+                        <input class="form-control"
+                               id="editModalAge"
+                               type="number"
+                               placeholder="Возраст"
+                               th:class="${#fields.hasErrors('age')}? 'class= form-control is-invalid' : 'class= form-control'"
+                               th:field="*{age}">
+                        <label for="editModalAge" th:if="${!#fields.hasErrors('age')}">Новый возраст
+                            пользователя</label>
+                        <label for="editModalAge" th:errors="*{age}"
+                               th:if="${#fields.hasErrors('age')}"></label>
+                    </div>
+
+
+                    <div class="form-floating mb-3">
+                        <div class="mb-3">
+                            <label for="editModalEmail" class="form-label">Новый адрес электронной почты</label>
+                            <input type="email" class="form-control" id="editModalEmail"
+                                   placeholder="name@example.com"
+                                   th:field="*{email}">
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            Выбор роли
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check">
+                                <label class="form-check-label d-block my-2" th:each="role: ${roles}">
+                                    <input class="form-check-input" th:field="*{roles}"
+                                           th:value="${role.getId()}"
+                                           type="checkbox">
+                                    <span th:text="${role.getRoleName()}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">Закрыть
+                    </button>
+                    <button type="submit"
+                            class="btn btn-outline-warning bi-pencil-square">
+                        Редактировать
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--Модальное окно удаления-->
+<div th:if="${deleteUser != null}" class="modal fade" id="deleteModal"
+     tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/admin/delete_user/{id}(id=${deleteUser.getId()})}"
+              th:method="DELETE"
+              th:object="${deleteUser}">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 bi-trash3"
+                        id="deleteModalLabel"> Удаление пользователя</h1>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Закрыть"></button>
+                </div>
+
+                <div class="modal-body mx-auto">
+                    <div class="mb-3 text-center">
+                        <label for="deleteModalName" class="form-label">Имя удаляемого пользователя</label>
+                        <input id="deleteModalName" class="form-control" placeholder="Имя"
+                               th:value="${deleteUser.getName()}"
+                               readonly
+                               style="width: 400px;">
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <label for="deleteModalGender" class="form-label">Пол удаляемого пользователя</label>
+                        <input id="deleteModalGender" class="form-control" placeholder="Пол"
+                               th:value="${deleteUser.getGender()}"
+                               readonly>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <label for="deleteModalAge" class="form-label">Возраст удаляемого пользователя</label>
+                        <input id="deleteModalAge" class="form-control" placeholder="Возраст"
+                               th:value="${deleteUser.getAge()}"
+                               readonly>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <label for="deleteModalEmail" class="form-label">Электронная почта удаляемого
+                            пользователя</label>
+                        <input id="deleteModalEmail" class="form-control" placeholder="Возраст"
+                               th:value="${deleteUser.getEmail()}"
+                               readonly>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <label for="deleteModalRoles" class="form-label">Роли удаляемого пользователя</label>
+                        <select id="deleteModalRoles" class="form-select" multiple aria-label="Роли удаляемого пользователя:" readonly>
+                            <option th:each="role: ${deleteUser.getRoles()}" th:text="${role.getRoleName()}"></option>
+                        </select>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">Закрыть
+                    </button>
+                    <button type="submit"
+                            class="btn btn-outline-danger bi-trash3">
+                        Удалить
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row p-1">
+        <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3 col-md-3 justify-content-start" id="v-pills-tab" role="tablist"
+                 aria-orientation="vertical">
+                <button th:each="role : ${currentUser.getUser().getRoles()}"
+                        th:if="${role.getRoleName() == 'ROLE_ADMIN'}" class="nav-link active" id="v-pills-home-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
+                        aria-selected="true">Главная
+                </button>
+                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile"
+                        aria-selected="false">Профиль
+                </button>
+            </div>
+            <div class="tab-content col-md-9 justify-content-start" id="v-pills-tabContent">
+                <!--Главная-->
+                <div th:each="role : ${currentUser.getUser().getRoles()}" th:if="${role.getRoleName() == 'ROLE_ADMIN'}"
+                     class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab" tabindex="0">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                                    data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                                    aria-selected="true">Таблица пользователей
+                            </button>
+                            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                                    data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                                    aria-selected="false">Создать пользователя
+                            </button>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <!--Таблица пользователей-->
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                             aria-labelledby="nav-home-tab" tabindex="0">
+                            <div class="card">
+                                <div class="card-header">Таблица пользователей</div>
+                                <div class="card-body">
+                                    <table class="table table-hover table-sm caption-top border-info text-center">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">id пользователя</th>
+                                            <th scope="col">Имя</th>
+                                            <th scope="col">Пол</th>
+                                            <th scope="col">Возраст</th>
+                                            <th scope="col">Электронная почта</th>
+                                            <th scope="col">Роли пользователя</th>
+                                            <th scope="col">Редактировать</th>
+                                            <th scope="col">Удалить</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${listOfUsers}">
+                                            <td th:text="${user.getId()}"></td>
+                                            <td th:text="${user.getName()}"></td>
+                                            <td th:text="${user.getGender()}"></td>
+                                            <td th:text="${user.getAge()}"></td>
+                                            <td th:text="${user.getEmail()}"></td>
+                                            <td th:text="${user.getStringRoles()}"></td>
+                                            <td>
+                                                <form name="editForm"
+                                                      th:action="@{/admin/edit_user/{id}(id=${user.getId()})}"
+                                                      method="GET">
+                                                    <button type="submit"
+                                                            class="btn btn-outline-warning bi-pencil-square"></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form name="deleteForm"
+                                                      th:action="@{/admin/delete_user/{id}(id=${user.getId()})}"
+                                                      method="GET">
+                                                    <button type="submit" class="btn btn-outline-danger bi-trash3">
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Создание пользователя-->
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
+                             tabindex="0">
+                            <form class="card"
+                                  th:action="@{/admin/create_user}"
+                                  th:method="POST"
+                                  th:object="${newUser}">
+
+                                <div class="card-header">Добавить нового пользователя</div>
+
+                                <div class="card-body mx-auto" style="margin: 10px; padding: 10px">
+                                    <div class="form-floating mb-3">
+                                        <input id="InputName"
+                                               placeholder="Имя"
+                                               th:class="${#fields.hasErrors('name')}? 'class= form-control is-invalid' : 'class= form-control'"
+                                               th:field="*{name}">
+                                        <label for="InputName" th:if="${!#fields.hasErrors('name')}">Имя нового
+                                            пользователя</label>
+                                        <label for="InputName" th:errors="*{name}"
+                                               th:if="${#fields.hasErrors('name')}"></label>
+                                    </div>
+
+
+                                    <div class="form-floating mb-3">
+                                        <input id="InputPassword"
+                                               placeholder="Пароль"
+                                               type="password"
+                                               th:class="${#fields.hasErrors('password')}? 'class= form-control is-invalid' : 'class= form-control'"
+                                               th:field="*{password}">
+                                        <label for="InputPassword" th:if="${!#fields.hasErrors('password')}">Пароль
+                                            нового
+                                            пользователя</label>
+                                        <label for="InputPassword" th:errors="*{password}"
+                                               th:if="${#fields.hasErrors('password')}"></label>
+                                    </div>
+
+                                    <div class="card" style="padding: 10px; width: 20rem;">
+                                        <div class="card-header" style="color: #aeff6d; font-size: 20px">
+                                            Выбор пола
+                                        </div>
+
+                                        <div class="card-body" style="margin: 5px; padding: 5px">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender" id="male"
+                                                       th:value="'Мужской'"
+                                                       th:field="*{gender}">
+                                                <label class="form-check-label" for="male">
+                                                    Мужской
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender" id="female"
+                                                       th:value="'Женский'"
+                                                       th:field="*{gender}">
+                                                <label class="form-check-label" for="female">
+                                                    Женский
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div th:if="${#fields.hasErrors('gender')}"
+                                             style="font-size: 14px; margin-top: 5px; border: 1px solid #e8858e; padding: 5px; border-radius: 5px;">
+                                            Необходимо выбрать пол!
+                                        </div>
+
+                                    </div>
+                                    <br>
+
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control"
+                                               id="inputAge"
+                                               type="number"
+                                               placeholder="Возраст"
+                                               th:class="${#fields.hasErrors('age')}? 'class= form-control is-invalid' : 'class= form-control'"
+                                               th:field="*{age}">
+                                        <label for="inputAge" th:if="${!#fields.hasErrors('age')}">Возраст нового
+                                            пользователя</label>
+                                        <label for="inputAge" th:errors="*{age}"
+                                               th:if="${#fields.hasErrors('age')}"></label>
+                                    </div>
+
+
+                                    <div class="form-floating mb-3">
+                                        <div class="mb-3">
+                                            <label for="inputEmail" class="form-label">Адрес электронной почты</label>
+                                            <input type="email" class="form-control" id="inputEmail"
+                                                   placeholder="name@example.com"
+                                                   th:field="*{email}">
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="card mb-3">
+                                        <div class="card-header">
+                                            Выбор роли
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-check">
+                                                <label class="form-check-label d-block my-2" th:each="role: ${roles}">
+                                                    <input class="form-check-input" th:field="*{roles}"
+                                                           th:value="${role.getId()}"
+                                                           type="checkbox">
+                                                    <span th:text="${role.getRoleName()}"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container d-flex justify-content-center align-items-center">
+                                        <button class=" btn btn-outline-success bi-database-add" type="submit">
+                                            Зарегистрироваться
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
-                        </td>
-                        <td>
-                            <form class="mb-2" th:action="@{/admin/delete_user}" th:method="DELETE">
-                                <input type="hidden" name="id" th:value="${user.getId()}">
-                                <button class="btn btn-outline-danger bi-trash3" type="submit">
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <br>
-                <hr>
-
+                        </div>
+                    </div>
+                </div>
+                <!--Профиль-->
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"
+                     tabindex="0">
+                    <div class="card">
+                        <div class="card-header">О пользователе</div>
+                        <div class="card-body">
+                            <table class="table table-hover table-sm caption-top border-info text-center">
+                                <thead>
+                                <tr>
+                                    <th scope="col">id пользователя</th>
+                                    <th scope="col">Имя</th>
+                                    <th scope="col">Пол</th>
+                                    <th scope="col">Возраст</th>
+                                    <th scope="col">Электронная почта</th>
+                                    <th scope="col">Роли пользователя</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${currentUser.getUser().getId()}"></td>
+                                    <td th:text="${currentUser.getUser().getName()}"></td>
+                                    <td th:text="${currentUser.getUser().getGender()}"></td>
+                                    <td th:text="${currentUser.getUser().getAge()}"></td>
+                                    <td th:text="${currentUser.getUser().getEmail()}"></td>
+                                    <td th:text="${currentUser.getUser().getStringRoles()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+
     </div>
 </div>
 
 
 <script src="/static/js/bootstrap.bundle.js"></script>
+<script src="/static/js/editModalControl.js"></script>
 </body>
 </html>

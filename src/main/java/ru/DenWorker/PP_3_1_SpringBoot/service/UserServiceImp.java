@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.DenWorker.PP_3_1_SpringBoot.dao.UserDao;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,13 +15,11 @@ public class UserServiceImp implements UserService {
 
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImp(UserDao userDao, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserServiceImp(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
     }
 
     @Transactional(readOnly = true)
@@ -33,10 +30,9 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void addUser(User newUser) {
-        newUser.setRoles(Collections.singletonList(roleService.findRoleByName("ROLE_USER").orElse(null)));
+    public void addUser(User newUser, List<Long> roleIds) {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        userDao.addUser(newUser);
+        userDao.addUser(newUser, roleIds);
     }
 
     @Transactional
