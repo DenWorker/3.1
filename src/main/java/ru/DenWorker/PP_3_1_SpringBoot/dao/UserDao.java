@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserDao {
     List<User> getAllUsers();
 
-    void addUser(User newUser);
+    void addUser(User newUser, List<Long> roleIds);
 
     void deleteUserById(long userId);
 
