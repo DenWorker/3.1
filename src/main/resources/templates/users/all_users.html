@@ -235,6 +235,7 @@
                 <div th:each="role : ${currentUser.getUser().getRoles()}" th:if="${role.getRoleName() == 'ROLE_ADMIN'}"
                      class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                      aria-labelledby="v-pills-home-tab" tabindex="0">
+                    <h1>Панель администратора</h1>
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
@@ -252,7 +253,7 @@
                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                              aria-labelledby="nav-home-tab" tabindex="0">
                             <div class="card">
-                                <div class="card-header">Таблица пользователей</div>
+                                <div class="card-header">Все пользователи</div>
                                 <div class="card-body">
                                     <table class="table table-hover table-sm caption-top border-info text-center">
                                         <thead>
@@ -418,6 +419,7 @@
                 <!--Профиль-->
                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"
                      tabindex="0">
+                    <h1>О пользователе</h1>
                     <div class="card">
                         <div class="card-header">О пользователе</div>
                         <div class="card-body">

@@ -30,7 +30,11 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public void addUser(User newUser) {
+    public void addUser(User newUser, List<Long> roleIds) {
+        if (roleIds != null) {
+            List<Role> selectedRoles = roleService.getRolesByIds(roleIds);
+            newUser.setRoles(selectedRoles);
+        }
         usersRepository.save(newUser);
     }
 
