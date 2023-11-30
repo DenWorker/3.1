@@ -214,7 +214,7 @@
 </div>
 
 
-<div class="container">
+<div class="container-fluid">
     <div class="row p-1">
         <div class="d-flex align-items-start">
             <div class="nav flex-column nav-pills me-3 col-md-3 justify-content-start" id="v-pills-tab" role="tablist"
@@ -230,7 +230,7 @@
                         aria-selected="false">Профиль
                 </button>
             </div>
-            <div class="tab-content col-md-9 justify-content-start" id="v-pills-tabContent">
+            <div class="tab-content col-md-8 justify-content-start" id="v-pills-tabContent">
                 <!--Главная-->
                 <div th:each="role : ${currentUser.getUser().getRoles()}" th:if="${role.getRoleName() == 'ROLE_ADMIN'}"
                      class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
