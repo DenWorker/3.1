@@ -12,7 +12,7 @@
     <title>Пользователи</title>
 </head>
 <body>
-<div th:replace="other/navbar.html"></div>
+<div th:replace="~{other/navbar.html}"></div>
 <!--Модальное окно редактирования-->
 <div th:if="${editUser != null}" class="modal fade" id="editModal"
      tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
@@ -407,8 +407,7 @@
                                     </div>
 
                                     <div class="container d-flex justify-content-center align-items-center">
-                                        <button class=" btn btn-outline-success bi-database-add" type="submit">
-                                            Зарегистрироваться
+                                        <button class=" btn btn-outline-success bi-database-add" type="submit"> Добавить
                                         </button>
                                     </div>
                                 </div>

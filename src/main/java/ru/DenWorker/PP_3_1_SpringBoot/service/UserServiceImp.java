@@ -14,12 +14,10 @@ import java.util.List;
 public class UserServiceImp implements UserService {
 
     private final UserDao userDao;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImp(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImp(UserDao userDao) {
         this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +29,6 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void addUser(User newUser, List<Long> roleIds) {
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userDao.addUser(newUser, roleIds);
     }
 
