@@ -33,7 +33,6 @@ public class User {
     private String email;
 
     @Column(name = "password")
-    @Size(min = 6, max = 300, message = "Размер пароля от 6 до 300 символов!")
     private String password;
 
     @ManyToMany
