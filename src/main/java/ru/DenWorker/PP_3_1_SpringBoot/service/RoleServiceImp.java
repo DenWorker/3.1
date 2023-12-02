@@ -33,5 +33,4 @@ public class RoleServiceImp implements RoleService {
         return rolesRepository.findRoleByRoleName(roleName);
     }
 
-
 }
