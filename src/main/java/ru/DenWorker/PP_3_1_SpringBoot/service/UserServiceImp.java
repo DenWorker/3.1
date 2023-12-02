@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.DenWorker.PP_3_1_SpringBoot.dao.UserDao;
 import ru.DenWorker.PP_3_1_SpringBoot.model.Role;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
+import ru.DenWorker.PP_3_1_SpringBoot.repository.UsersRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,19 +18,19 @@ public class UserServiceImp implements UserService {
 
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final UserDao userDao;
+    private final UsersRepository usersRepository;
 
     @Autowired
-    public UserServiceImp(RoleService roleService, PasswordEncoder passwordEncoder, UserDao userDao) {
+    public UserServiceImp(RoleService roleService, PasswordEncoder passwordEncoder, UsersRepository usersRepository) {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
-        this.userDao = userDao;
+        this.usersRepository = usersRepository;
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+        return usersRepository.findAll();
     }
 
     @Transactional
@@ -41,19 +41,19 @@ public class UserServiceImp implements UserService {
             newUser.setRoles(selectedRoles);
         }
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        userDao.addUser(newUser);
+        usersRepository.save(newUser);
     }
 
     @Transactional
     @Override
     public void deleteUserById(long userId) {
-        userDao.deleteUserById(userId);
+        usersRepository.deleteUserById(userId);
     }
 
     @Transactional
     @Override
     public void editUserAndHisRoles(long userId, User updatedUser, List<Long> roleIds) {
-        Optional<User> userOptional = userDao.getUserById(userId);
+        Optional<User> userOptional = usersRepository.getUserById(userId);
         if (userOptional.isPresent()) {
             User existingUser = userOptional.get();
 
@@ -70,7 +70,7 @@ public class UserServiceImp implements UserService {
                 existingUser.setRoles(selectedRoles);
             }
 
-            userDao.editUserAndHisRoles(existingUser);
+            usersRepository.save(existingUser);
         } else {
             throw new EntityNotFoundException("User with ID " + userId + " not found");
         }
@@ -79,6 +79,6 @@ public class UserServiceImp implements UserService {
     @Transactional(readOnly = true)
     @Override
     public User getUserById(long userId) {
-        return userDao.getUserById(userId).orElse(null);
+        return usersRepository.getUserById(userId).orElse(null);
     }
 }
