@@ -2,6 +2,7 @@ package ru.DenWorker.PP_3_1_SpringBoot.service;
 
 
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
+import ru.DenWorker.PP_3_1_SpringBoot.security.UserDetailsImpl;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ public interface UserService {
     void editUserAndHisRoles(long userId, User updatedUser, List<Long> roleIds);
 
     User getUserById(long userId);
+
+    public UserDetailsImpl getAuthenticatedUser();
 
 }

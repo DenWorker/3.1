@@ -6,22 +6,22 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import ru.DenWorker.PP_3_1_SpringBoot.security.UserDetailsImpl;
-import ru.DenWorker.PP_3_1_SpringBoot.service.UserDetailsServiceImpl;
 
 
 @Component
 public class AuthProviderImpl implements AuthenticationProvider {
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public AuthProviderImpl(UserDetailsServiceImpl userDetailsServiceImpl, PasswordEncoder passwordEncoder) {
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    public AuthProviderImpl(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class AuthProviderImpl implements AuthenticationProvider {
         String user_name = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        UserDetailsImpl userDetails = userDetailsServiceImpl.loadUserByUsername(user_name);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user_name);
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Incorrect password!");

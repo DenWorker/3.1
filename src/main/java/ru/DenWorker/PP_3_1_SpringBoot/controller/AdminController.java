@@ -11,7 +11,6 @@ import ru.DenWorker.PP_3_1_SpringBoot.model.Role;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
 import ru.DenWorker.PP_3_1_SpringBoot.security.UserDetailsImpl;
 import ru.DenWorker.PP_3_1_SpringBoot.service.RoleService;
-import ru.DenWorker.PP_3_1_SpringBoot.service.UserDetailsServiceImpl;
 import ru.DenWorker.PP_3_1_SpringBoot.service.UserService;
 
 import java.util.List;
@@ -21,19 +20,17 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
-    private final UserDetailsServiceImpl userDetailsServiceImp;
     private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, UserDetailsServiceImpl userDetailsServiceImp, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
-        this.userDetailsServiceImp = userDetailsServiceImp;
         this.roleService = roleService;
     }
 
     @ModelAttribute("currentUser")
     public UserDetailsImpl getCurrentUser() {
-        return userDetailsServiceImp.getAuthenticatedUser();
+        return userService.getAuthenticatedUser();
     }
 
     @ModelAttribute("listOfUsers")

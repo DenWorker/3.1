@@ -6,22 +6,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.DenWorker.PP_3_1_SpringBoot.security.UserDetailsImpl;
-import ru.DenWorker.PP_3_1_SpringBoot.service.UserDetailsServiceImpl;
+import ru.DenWorker.PP_3_1_SpringBoot.service.UserService;
 
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
     @ModelAttribute("currentUser")
     public UserDetailsImpl getCurrentUser() {
-        return userDetailsService.getAuthenticatedUser();
+        return userService.getAuthenticatedUser();
     }
 
     @GetMapping("/login")
