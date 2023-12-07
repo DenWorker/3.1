@@ -35,13 +35,14 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void addUser(User newUser, List<Long> roleIds) {
-        if (roleIds != null) {
+    public long addUser(User newUser, List<Long> roleIds) {
+        if (!roleIds.isEmpty()) {
             List<Role> selectedRoles = roleService.getRolesByIds(roleIds);
             newUser.setRoles(selectedRoles);
         }
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        usersRepository.save(newUser);
+        User savedUser = usersRepository.save(newUser);
+        return savedUser.getId();
     }
 
     @Transactional
@@ -52,7 +53,7 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void editUserAndHisRoles(long userId, User updatedUser, List<Long> roleIds) {
+    public void editUserAndHisRoles(long userId, User updatedUser, List<Long> rolesIds) {
         Optional<User> userOptional = usersRepository.getUserById(userId);
         if (userOptional.isPresent()) {
             User existingUser = userOptional.get();
@@ -65,8 +66,8 @@ public class UserServiceImp implements UserService {
                 existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             }
 
-            if (roleIds != null) {
-                List<Role> selectedRoles = roleService.getRolesByIds(roleIds);
+            if (!rolesIds.isEmpty()) {
+                List<Role> selectedRoles = roleService.getRolesByIds(rolesIds);
                 existingUser.setRoles(selectedRoles);
             }
 

@@ -29,20 +29,27 @@
             </div>
             <div class="modal-body mx-auto">
 
+                <input class="form-control"
+                       id="inputIdEditModal"
+                       type="number"
+                       hidden>
+                <label for="inputIdEditModal"></label>
+
+
                 <div class="form-floating mb-3">
-                    <input id="editModalName"
+                    <input id="inputNameEditModal"
                            placeholder="Имя"
                            class="form-control">
-                    <label for="editModalName">Новое имя пользователя</label>
+                    <label for="inputNameEditModal">Новое имя пользователя</label>
                 </div>
 
 
                 <div class="form-floating mb-3">
-                    <input id="editModalPassword"
+                    <input id="inputPasswordEditModal"
                            placeholder="Пароль"
                            type="password"
                            class="form-control">
-                    <label for="editModalPassword">Новый пароль пользователя</label>
+                    <label for="inputPasswordEditModal">Новый пароль пользователя</label>
                 </div>
 
 
@@ -53,16 +60,18 @@
 
                     <div class="card-body" style="margin: 5px; padding: 5px">
                         <div class="form-check">
-                            <label class="form-check-label" for="editModalMale">
+                            <label class="form-check-label" for="radioMaleEditModal">
                                 Мужской
                             </label>
-                            <input class="form-check-input" type="radio" name="gender" id="editModalMale">
+                            <input class="form-check-input" type="radio" name="gender" id="radioMaleEditModal"
+                                   value="Мужской">
                         </div>
                         <div class="form-check">
-                            <label class="form-check-label" for="editModalFemale">
+                            <label class="form-check-label" for="radioFemaleEditModal">
                                 Женский
                             </label>
-                            <input class="form-check-input" type="radio" name="gender" id="editModalFemale">
+                            <input class="form-check-input" type="radio" name="gender" id="radioFemaleEditModal"
+                                   value="Женский">
                         </div>
                     </div>
                 </div>
@@ -70,17 +79,17 @@
 
                 <div class="form-floating mb-3">
                     <input class="form-control"
-                           id="editModalAge"
+                           id="inputAgeEditModal"
                            type="number"
                            placeholder="Возраст">
-                    <label for="editModalAge">Новый возраст пользователя</label>
+                    <label for="inputAgeEditModal">Новый возраст пользователя</label>
                 </div>
 
 
                 <div class="form-floating mb-3">
                     <div class="mb-3">
-                        <label for="editModalEmail" class="form-label">Новый адрес электронной почты</label>
-                        <input type="email" class="form-control" id="editModalEmail"
+                        <label for="inputEmailEditModal" class="form-label">Новый адрес электронной почты</label>
+                        <input type="email" class="form-control" id="inputEmailEditModal"
                                placeholder="name@example.com">
                     </div>
                 </div>
@@ -92,10 +101,13 @@
                     </div>
                     <div class="card-body">
                         <div class="form-check">
-                            <label class="form-check-label d-block my-2">
+                            <label class="form-check-label d-block my-2" th:each="role: ${roles}">
                                 <input class="form-check-input"
-                                       type="checkbox">
-                                <span></span>
+                                       type="checkbox"
+                                       th:id="'checkboxEditModal' + ${role.getRoleName()}"
+                                       th:value="${role.getId()}"
+                                       name="checkBoxRoleEditModal">
+                                <span th:text="${role.getRoleName()}"></span>
                             </label>
                         </div>
                     </div>
@@ -106,8 +118,9 @@
                 <button type="button" class="btn btn-outline-secondary"
                         data-bs-dismiss="modal">Закрыть
                 </button>
-                <button type="submit"
-                        class="btn btn-outline-warning bi-pencil-square">
+                <button type="button"
+                        class="btn btn-outline-warning bi-pencil-square"
+                        onclick="editUser()">
                     Редактировать
                 </button>
             </div>
@@ -129,38 +142,38 @@
             </div>
 
             <div class="modal-body mx-auto">
+
+                <input class="form-control"
+                       id="inputIdDeleteModal"
+                       type="number"
+                       hidden>
+                <label for="inputIdDeleteModal"></label>
+
                 <div class="mb-3 text-center">
-                    <label for="deleteModalName" class="form-label">Имя удаляемого пользователя</label>
-                    <input id="deleteModalName" class="form-control" placeholder="Имя"
-                           readonly
-                           style="width: 400px;">
+                    <label for="spanNameDeleteModal" class="form-label">Имя удаляемого пользователя</label>
+                    <span id="spanNameDeleteModal" class="form-control" style="width: 400px; text-align: left;"></span>
                 </div>
 
                 <div class="mb-3 text-center">
-                    <label for="deleteModalGender" class="form-label">Пол удаляемого пользователя</label>
-                    <input id="deleteModalGender" class="form-control" placeholder="Пол"
-                           readonly>
+                    <label for="spanGenderDeleteModal" class="form-label">Пол удаляемого пользователя</label>
+                    <span id="spanGenderDeleteModal" class="form-control" style="text-align: left;"></span>
                 </div>
 
                 <div class="mb-3 text-center">
-                    <label for="deleteModalAge" class="form-label">Возраст удаляемого пользователя</label>
-                    <input id="deleteModalAge" class="form-control" placeholder="Возраст"
-                           readonly>
+                    <label for="spanAgeDeleteModal" class="form-label">Возраст удаляемого пользователя</label>
+                    <span id="spanAgeDeleteModal" class="form-control" style="text-align: left;"></span>
                 </div>
 
                 <div class="mb-3 text-center">
-                    <label for="deleteModalEmail" class="form-label">Электронная почта удаляемого
+                    <label for="spanEmailDeleteModal" class="form-label">Электронная почта удаляемого
                         пользователя</label>
-                    <input id="deleteModalEmail" class="form-control" placeholder="Электронная почта"
-                           readonly>
+                    <span id="spanEmailDeleteModal" class="form-control" style="text-align: left;"></span>
                 </div>
 
                 <div class="mb-3 text-center">
-                    <label for="deleteModalRoles" class="form-label">Роли удаляемого пользователя</label>
-                    <select id="deleteModalRoles" class="form-select" multiple
-                            aria-label="Роли удаляемого пользователя:" readonly>
-                        <option></option>
-                    </select>
+                    <label for="spanRolesDeleteModal" class="form-label">Роли удаляемого пользователя</label>
+                    <span id="spanRolesDeleteModal" class="form-control"
+                          style="text-align: left; white-space: pre-line;"></span>
                 </div>
 
 
@@ -170,8 +183,9 @@
                 <button type="button" class="btn btn-outline-secondary"
                         data-bs-dismiss="modal">Закрыть
                 </button>
-                <button type="submit"
-                        class="btn btn-outline-danger bi-trash3">
+                <button type="button"
+                        class="btn btn-outline-danger bi-trash3"
+                        onclick="deleteUser()">
                     Удалить
                 </button>
             </div>
@@ -221,7 +235,8 @@
                             <div class="card">
                                 <div class="card-header">Все пользователи</div>
                                 <div class="card-body">
-                                    <table class="table table-hover table-sm caption-top border-info text-center">
+                                    <table id="tableOfUsers"
+                                           class="table table-hover table-sm caption-top border-info text-center">
                                         <thead>
                                         <tr>
                                             <th scope="col">id пользователя</th>
@@ -249,7 +264,7 @@
                                                         onclick="showEditModal(this.getAttribute('data-user-id'))"></button>
                                             </td>
                                             <td>
-                                                <button type="submit"
+                                                <button type="button"
                                                         class="btn btn-outline-danger bi-trash3"
                                                         th:attr="data-user-id=${user.getId()}"
                                                         onclick="showDeleteModal(this.getAttribute('data-user-id'))">
@@ -264,117 +279,105 @@
                         <!--Создание пользователя-->
                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"
                              tabindex="0">
-                            <form class="card"
-                                  th:action="@{/admin/create_user}"
-                                  th:method="POST"
-                                  th:object="${newUser}">
+
+                            <div class="card">
 
                                 <div class="card-header">Добавить нового пользователя</div>
 
                                 <div class="card-body mx-auto" style="margin: 10px; padding: 10px">
+                                    <input class="form-control"
+                                           id="inputIdNewUser"
+                                           type="number"
+                                           hidden>
+                                    <label for="inputIdNewUser"></label>
+
+
                                     <div class="form-floating mb-3">
-                                        <input id="InputName"
+                                        <input id="inputNameNewUser"
                                                placeholder="Имя"
-                                               th:class="${#fields.hasErrors('name')}? 'class= form-control is-invalid' : 'class= form-control'"
-                                               th:field="*{name}">
-                                        <label for="InputName" th:if="${!#fields.hasErrors('name')}">Имя нового
-                                            пользователя</label>
-                                        <label for="InputName" th:errors="*{name}"
-                                               th:if="${#fields.hasErrors('name')}"></label>
+                                               class="form-control">
+                                        <label for="inputNameNewUser">Имя нового пользователя</label>
                                     </div>
 
 
                                     <div class="form-floating mb-3">
-                                        <input id="InputPassword"
+                                        <input id="inputPasswordNewUser"
                                                placeholder="Пароль"
                                                type="password"
-                                               th:class="${#fields.hasErrors('password')}? 'class= form-control is-invalid' : 'class= form-control'"
-                                               th:field="*{password}">
-                                        <label for="InputPassword" th:if="${!#fields.hasErrors('password')}">Пароль
-                                            нового
-                                            пользователя</label>
-                                        <label for="InputPassword" th:errors="*{password}"
-                                               th:if="${#fields.hasErrors('password')}"></label>
+                                               class="form-control">
+                                        <label for="inputPasswordNewUser">Пароль нового пользователя</label>
                                     </div>
+
 
                                     <div class="card" style="padding: 10px; width: 20rem;">
                                         <div class="card-header" style="color: #aeff6d; font-size: 20px">
-                                            Выбор пола
+                                            Выбор пола нового пользователя
                                         </div>
 
                                         <div class="card-body" style="margin: 5px; padding: 5px">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="gender" id="male"
-                                                       th:value="'Мужской'"
-                                                       th:field="*{gender}">
-                                                <label class="form-check-label" for="male">
+                                                <label class="form-check-label" for="radioMaleNewUser">
                                                     Мужской
                                                 </label>
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       id="radioMaleNewUser"
+                                                       value="Мужской">
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="gender" id="female"
-                                                       th:value="'Женский'"
-                                                       th:field="*{gender}">
-                                                <label class="form-check-label" for="female">
+                                                <label class="form-check-label" for="radioFemaleNewUser">
                                                     Женский
                                                 </label>
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                       id="radioFemaleNewUser"
+                                                       value="Женский">
                                             </div>
                                         </div>
-
-                                        <div th:if="${#fields.hasErrors('gender')}"
-                                             style="font-size: 14px; margin-top: 5px; border: 1px solid #e8858e; padding: 5px; border-radius: 5px;">
-                                            Необходимо выбрать пол!
-                                        </div>
-
                                     </div>
                                     <br>
 
                                     <div class="form-floating mb-3">
                                         <input class="form-control"
-                                               id="inputAge"
+                                               id="inputAgeNewUser"
                                                type="number"
-                                               placeholder="Возраст"
-                                               th:class="${#fields.hasErrors('age')}? 'class= form-control is-invalid' : 'class= form-control'"
-                                               th:field="*{age}">
-                                        <label for="inputAge" th:if="${!#fields.hasErrors('age')}">Возраст нового
-                                            пользователя</label>
-                                        <label for="inputAge" th:errors="*{age}"
-                                               th:if="${#fields.hasErrors('age')}"></label>
+                                               placeholder="Возраст">
+                                        <label for="inputAgeNewUser">Возраст нового пользователя</label>
                                     </div>
 
 
                                     <div class="form-floating mb-3">
                                         <div class="mb-3">
-                                            <label for="inputEmail" class="form-label">Адрес электронной почты</label>
-                                            <input type="email" class="form-control" id="inputEmail"
-                                                   placeholder="name@example.com"
-                                                   th:field="*{email}">
+                                            <label for="inputEmailNewUser" class="form-label">Адрес электронной почты
+                                                нового пользователя</label>
+                                            <input type="email" class="form-control" id="inputEmailNewUser"
+                                                   placeholder="name@example.com">
                                         </div>
                                     </div>
                                     <br>
 
                                     <div class="card mb-3">
                                         <div class="card-header">
-                                            Выбор роли
+                                            Выбор роли нового пользователя
                                         </div>
                                         <div class="card-body">
                                             <div class="form-check">
                                                 <label class="form-check-label d-block my-2" th:each="role: ${roles}">
-                                                    <input class="form-check-input" th:field="*{roles}"
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           th:id="'checkboxNewUser' + ${role.getRoleName()}"
                                                            th:value="${role.getId()}"
-                                                           type="checkbox">
+                                                           name="checkBoxRoleNewUser">
                                                     <span th:text="${role.getRoleName()}"></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="container d-flex justify-content-center align-items-center">
-                                        <button class=" btn btn-outline-success bi-database-add" type="submit"> Добавить
+                                    <div class="container d-flex justify-content-center">
+                                        <button class=" btn btn-outline-success bi-database-add" type="button"
+                                                onclick="createUser()"> Добавить
                                         </button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -385,7 +388,8 @@
                     <div class="card">
                         <div class="card-header">О пользователе</div>
                         <div class="card-body">
-                            <table class="table table-hover table-sm caption-top border-info text-center">
+                            <table id="tableOfCurrentUser"
+                                   class="table table-hover table-sm caption-top border-info text-center">
                                 <thead>
                                 <tr>
                                     <th scope="col">id пользователя</th>
@@ -417,6 +421,7 @@
 
 
 <script src="/static/js/bootstrap.bundle.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/static/js/adminsScripts.js"></script>
 
 </body>
