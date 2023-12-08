@@ -51,7 +51,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**", "/api/auth/**", "/static/**",
                                 "/logout").permitAll()
                         .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN"));
+                        .requestMatchers("/user/**", "/api/user/**").hasAnyRole("USER", "ADMIN"));
 
 
         http.formLogin(form -> form

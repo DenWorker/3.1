@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     $.ajax({
-        url: 'http://localhost:8080/api/auth/get_current_user',
+        url: 'http://localhost:8080/api/user/get_current_user',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
