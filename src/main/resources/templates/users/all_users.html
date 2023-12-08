@@ -100,15 +100,8 @@
                         Выбор роли
                     </div>
                     <div class="card-body">
-                        <div class="form-check">
-                            <label class="form-check-label d-block my-2" th:each="role: ${roles}">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       th:id="'checkboxEditModal' + ${role.getRoleName()}"
-                                       th:value="${role.getId()}"
-                                       name="checkBoxRoleEditModal">
-                                <span th:text="${role.getRoleName()}"></span>
-                            </label>
+                        <div class="form-check" id="divOfRolesInEditModal">
+                            <!--Здесь работает JS JQuery-->
                         </div>
                     </div>
                 </div>
@@ -199,8 +192,7 @@
         <div class="d-flex align-items-start">
             <div class="nav flex-column nav-pills me-3 col-md-3 justify-content-start" id="v-pills-tab" role="tablist"
                  aria-orientation="vertical">
-                <button th:each="role : ${currentUser.getUser().getRoles()}"
-                        th:if="${role.getRoleName() == 'ROLE_ADMIN'}" class="nav-link active" id="v-pills-home-tab"
+                <button class="nav-link active" id="v-pills-home-tab"
                         data-bs-toggle="pill"
                         data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
                         aria-selected="true">Главная
@@ -212,8 +204,7 @@
             </div>
             <div class="tab-content col-md-8 justify-content-start" id="v-pills-tabContent">
                 <!--Главная-->
-                <div th:each="role : ${currentUser.getUser().getRoles()}" th:if="${role.getRoleName() == 'ROLE_ADMIN'}"
-                     class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
                      aria-labelledby="v-pills-home-tab" tabindex="0">
                     <h1>Панель администратора</h1>
                     <nav>
@@ -250,27 +241,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="user : ${listOfUsers}">
-                                            <td th:text="${user.getId()}"></td>
-                                            <td th:text="${user.getName()}"></td>
-                                            <td th:text="${user.getGender()}"></td>
-                                            <td th:text="${user.getAge()}"></td>
-                                            <td th:text="${user.getEmail()}"></td>
-                                            <td th:text="${user.getStringRoles()}"></td>
-                                            <td>
-                                                <button type="button"
-                                                        class="btn btn-outline-warning bi-pencil-square"
-                                                        th:attr="data-user-id=${user.getId()}"
-                                                        onclick="showEditModal(this.getAttribute('data-user-id'))"></button>
-                                            </td>
-                                            <td>
-                                                <button type="button"
-                                                        class="btn btn-outline-danger bi-trash3"
-                                                        th:attr="data-user-id=${user.getId()}"
-                                                        onclick="showDeleteModal(this.getAttribute('data-user-id'))">
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        <!--Здесь работает JS JQuery-->
                                         </tbody>
                                     </table>
                                 </div>
@@ -359,15 +330,8 @@
                                             Выбор роли нового пользователя
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-check">
-                                                <label class="form-check-label d-block my-2" th:each="role: ${roles}">
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           th:id="'checkboxNewUser' + ${role.getRoleName()}"
-                                                           th:value="${role.getId()}"
-                                                           name="checkBoxRoleNewUser">
-                                                    <span th:text="${role.getRoleName()}"></span>
-                                                </label>
+                                            <div class="form-check" id="divOfRolesOfNewUser">
+                                                <!--Здесь работает JS JQuery-->
                                             </div>
                                         </div>
                                     </div>
@@ -401,14 +365,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td th:text="${currentUser.getUser().getId()}"></td>
-                                    <td th:text="${currentUser.getUser().getName()}"></td>
-                                    <td th:text="${currentUser.getUser().getGender()}"></td>
-                                    <td th:text="${currentUser.getUser().getAge()}"></td>
-                                    <td th:text="${currentUser.getUser().getEmail()}"></td>
-                                    <td th:text="${currentUser.getUser().getStringRoles()}"></td>
-                                </tr>
+                                <!--Здесь работает JS JQuery-->
                                 </tbody>
                             </table>
                         </div>

@@ -1,3 +1,129 @@
+$(document).ready(function () {
+
+    $.ajax({
+        url: 'http://localhost:8080/api/auth/get_current_user',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let pOfCurrentUserInNavBar = $('<p>').css({
+                'margin': '5px',
+                'font-size': '21px'
+            }).text(data.email + ' with roles: ' + data.roles.join('; '));
+            $('#navbarBrandCurrentUser').append(pOfCurrentUserInNavBar);
+
+            /////////////////////////////////////////////////////////////////////////////////
+
+            let rowOfCurrentUser = $('<tr>').append(
+                $('<td>').text(data.id),
+                $('<td>').text(data.name),
+                $('<td>').text(data.gender),
+                $('<td>').text(data.age),
+                $('<td>').text(data.email),
+                $('<td>').text(data.roles.join('; ')),
+            );
+            $('#tableOfCurrentUser').append(rowOfCurrentUser);
+
+            /////////////////////////////////////////////////////////////////////////////////
+
+            if (!data.roles.includes('ROLE_ADMIN')) {
+                $('#v-pills-home-tab').hide();
+                $('#v-pills-home').hide();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Ошибка при получении данных: ' + error);
+        }
+    });
+
+    $.ajax({
+        url: 'http://localhost:8080/api/admin/get_all_roles',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let divOfRolesInEditModal = $('#divOfRolesInEditModal');
+            let divOfRolesOfNewUser = $('#divOfRolesOfNewUser');
+
+            for (const role of data) {
+                let labelOfRolesInEditModal = $('<label>').addClass('form-check-label d-block my-2');
+                let spanOfRolesInEditModal = $('<span>').text(role.roleName);
+
+                let inputOfRolesInEditModal = $('<input>').addClass('form-check-input')
+                    .attr({
+                        'type': 'checkbox',
+                        'id': 'checkboxEditModal' + role.roleName,
+                        'value': role.id,
+                        'name': 'checkBoxRoleEditModal'
+                    });
+
+                labelOfRolesInEditModal.append(inputOfRolesInEditModal)
+                    .append(spanOfRolesInEditModal);
+                divOfRolesInEditModal.append(labelOfRolesInEditModal);
+
+                /////////////////////////////////////////////////////////////////////////////////
+
+                let labelOfRolesOfNewUser = $('<label>').addClass('form-check-label d-block my-2');
+                let spanOfRolesOfNewUser = $('<span>').text(role.roleName);
+
+                let inputOfRolesOfNewUser = $('<input>').addClass('form-check-input')
+                    .attr({
+                        'type': 'checkbox',
+                        'id': 'checkboxNewUser' + role.roleName,
+                        'value': role.id,
+                        'name': 'checkBoxRoleNewUser'
+                    });
+
+                labelOfRolesOfNewUser.append(inputOfRolesOfNewUser)
+                    .append(spanOfRolesOfNewUser);
+                divOfRolesOfNewUser.append(labelOfRolesOfNewUser);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Ошибка при получении данных: ' + error);
+        }
+    });
+
+    $.ajax({
+        url: 'http://localhost:8080/api/admin/get_all_users',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            for (const user of data) {
+                let idOfUser = user.id;
+                let buttonShowEditModal = $('<button>').attr({
+                    'type': 'button',
+                    'class': 'btn btn-outline-warning bi-pencil-square',
+                    'data-user-id': idOfUser
+                }).on('click', function () {
+                    showEditModal(idOfUser);
+                })
+
+                let buttonShowDeleteModal = $('<button>').attr({
+                    'type': 'button',
+                    'class': 'btn btn-outline-danger bi-trash3',
+                    'data-user-id': idOfUser
+                }).on('click', function () {
+                    showDeleteModal(idOfUser)
+                })
+
+                let newRowOfUser = $('<tr>').append(
+                    $('<td>').text(idOfUser),
+                    $('<td>').text(user.name),
+                    $('<td>').text(user.gender),
+                    $('<td>').text(user.age),
+                    $('<td>').text(user.email),
+                    $('<td>').text(user.roles.join('; ')),
+                    $('<td>').append(buttonShowEditModal),
+                    $('<td>').append(buttonShowDeleteModal)
+                );
+                $('#tableOfUsers').append(newRowOfUser);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Ошибка при получении данных: ' + error);
+        }
+    });
+});
+
 function showEditModal(userId) {
     $.ajax({
         url: 'http://localhost:8080/api/admin/edit_user/' + userId,
@@ -179,7 +305,7 @@ function createUser() {
                 $('<td>').text(newUser.gender),
                 $('<td>').text(newUser.age),
                 $('<td>').text(newUser.email),
-                $('<td>').text(rolesOfNewUser),
+                $('<td>').text(rolesOfNewUser.join('; ')),
                 $('<td>').append(buttonShowEditModal),
                 $('<td>').append(buttonShowDeleteModal)
             );

@@ -1,9 +1,11 @@
 package ru.DenWorker.PP_3_1_SpringBoot.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class RoleDto {
@@ -47,4 +49,8 @@ public class RoleDto {
         this.users = users;
     }
 
+    @JsonProperty("users")
+    public List<String> getNamesOfUsersOfRole() {
+        return users.stream().map(User::getName).collect(Collectors.toList());
+    }
 }

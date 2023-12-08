@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.DenWorker.PP_3_1_SpringBoot.dto.RoleDto;
 import ru.DenWorker.PP_3_1_SpringBoot.dto.UserDto;
+import ru.DenWorker.PP_3_1_SpringBoot.model.Role;
 import ru.DenWorker.PP_3_1_SpringBoot.model.User;
+import ru.DenWorker.PP_3_1_SpringBoot.service.RoleService;
 import ru.DenWorker.PP_3_1_SpringBoot.service.UserService;
 
 import java.util.List;
@@ -17,17 +20,30 @@ import java.util.Map;
 public class AdminControllerRest {
 
     private final UserService userService;
+    private final RoleService roleService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public AdminControllerRest(UserService userService, ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public AdminControllerRest(UserService userService, RoleService roleService, ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.userService = userService;
+        this.roleService = roleService;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
     }
 
+    @GetMapping("/get_all_roles")
+    public List<RoleDto> getAllRoles() {
+        return roleService.getAllRoles().stream().map(this::convertToRoleDto).toList();
+    }
+
+    @GetMapping("/get_all_users")
+    public List<UserDto> getAllRole() {
+        return userService.getAllUsers().stream().map(this::convertToUserDto).toList();
+    }
+
     @PostMapping("/create_user")
+
     public long addUser(@RequestBody Map<String, Object> requestBody) {
         User newUser = objectMapper.convertValue(requestBody.get("newUser"), User.class);
 
@@ -71,6 +87,14 @@ public class AdminControllerRest {
 
     private UserDto convertToUserDto(User user) {
         return modelMapper.map(user, UserDto.class);
+    }
+
+    private Role convertToRole(RoleDto roleDto) {
+        return modelMapper.map(roleDto, Role.class);
+    }
+
+    private RoleDto convertToRoleDto(Role role) {
+        return modelMapper.map(role, RoleDto.class);
     }
 
 }

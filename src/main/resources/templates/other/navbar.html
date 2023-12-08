@@ -7,8 +7,9 @@
 
 <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary" style="margin: 5px;">
     <div class="container-fluid">
-        <div class="navbar-brand  bi-database fs-1" style="display: flex; align-items: center;">
-            <p style="margin: 5px; font-size: 21px;" th:text="${currentUser.getUser().getEmail() + ' with roles: ' + currentUser.getUser().getStringRoles()}"></p>
+        <div class="navbar-brand  bi-database fs-1" id="navbarBrandCurrentUser"
+             style="display: flex; align-items: center;">
+            <!--Здесь работает JS JQuery-->
         </div>
     </div>
     <ul class="navbar-nav ml-auto">
