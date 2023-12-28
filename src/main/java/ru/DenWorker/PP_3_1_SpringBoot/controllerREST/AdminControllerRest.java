@@ -43,7 +43,6 @@ public class AdminControllerRest {
     }
 
     @PostMapping("/create_user")
-
     public long addUser(@RequestBody Map<String, Object> requestBody) {
         User newUser = objectMapper.convertValue(requestBody.get("newUser"), User.class);
 
